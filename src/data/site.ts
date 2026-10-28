@@ -16,7 +16,7 @@ export const site: SiteInfo = {
   name: "unstudio",
   tagline: ["Let’s start", "something new"],
   email: "",
-  bookingHref: "/about#contact",
+  bookingHref: "/contact",
   socials: [
     { label: "Instagram", href: "#" },
     { label: "Behance", href: "#" },

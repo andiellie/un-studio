@@ -15,7 +15,7 @@ export const navItems: NavItem[] = [
   { label: "about", href: "/about" },
 ];
 
-export const contactItem: NavItem = { label: "contact", href: "/about#contact" };
+export const contactItem: NavItem = { label: "contact", href: "/contact" };
 
 export type HeaderProps = Record<string, never>;
 

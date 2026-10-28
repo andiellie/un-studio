@@ -8,7 +8,7 @@ const pillClass =
   "group inline-flex items-center gap-3 rounded-full border border-white/40 px-5 py-3 text-xs font-medium tracking-wide uppercase transition-colors duration-200 hover:border-white hover:bg-white hover:text-black";
 
 export default function Footer() {
-  const emailHref = site.email ? `mailto:${site.email}` : "/about#contact";
+  const emailHref = site.email ? `mailto:${site.email}` : "/contact";
 
   return (
     <footer className="bg-black text-white">
@@ -71,7 +71,7 @@ export default function Footer() {
             <Link href="/about" className="transition-colors duration-200 hover:text-white">
               About
             </Link>
-            <Link href="/about#contact" className="transition-colors duration-200 hover:text-white">
+            <Link href="/contact" className="transition-colors duration-200 hover:text-white">
               Contact
             </Link>
           </nav>
