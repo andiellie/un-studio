@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <Header />
         <SectionNav />
-        <main className="flex-1">{children}</main>
+        <main className="mx-auto min-h-[150vh] w-full max-w-screen-2xl flex-1 px-4 py-24 sm:px-8 sm:py-32">{children}</main>
         <Footer />
       </body>
     </html>
