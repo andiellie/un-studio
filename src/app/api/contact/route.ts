@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   //      to: ["hola@tu-dominio.com"],
   //      replyTo: data.email,
   //      subject: `New contact from ${data.name}`,
-  //      text: `${data.message}\n\nServices: ${data.services.join(", ") || "—"}`,
+  //      text: `${data.message}\n\nServicios: ${data.services.join(", ")}\n\n${JSON.stringify(data.answers, null, 2)}`,
   //    });
   // 4. if (error) return Response.json({ ok: false } satisfies ContactResponse, { status: 502 });
 

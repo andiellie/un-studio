@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -36,12 +36,57 @@ function ArrowIcon({ className = "" }: { className?: string }) {
   );
 }
 
-export default function Header() {
-  const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+type NavLinkProps = {
+  item: NavItem;
+  className: (active: boolean) => string;
+  onClick?: () => void;
+};
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+function isActive(pathname: string, href: string) {
+  return href === "/" ? pathname === "/" : pathname.startsWith(href);
+}
+
+// Reads the pathname, so it must sit inside <Suspense> (dynamic routes like
+// /projects/[slug] don't know their pathname while prerendering).
+function ActiveNavLink({ item, className, onClick }: NavLinkProps) {
+  const active = isActive(usePathname(), item.href);
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className={className(active)}
+    >
+      {item.label}
+    </Link>
+  );
+}
+
+function NavLink(props: NavLinkProps) {
+  const { item, className, onClick } = props;
+  return (
+    <Suspense
+      fallback={
+        <Link href={item.href} onClick={onClick} className={className(false)}>
+          {item.label}
+        </Link>
+      }
+    >
+      <ActiveNavLink {...props} />
+    </Suspense>
+  );
+}
+
+const desktopPillClass = (active: boolean) =>
+  `block rounded-full px-5 py-2.5 text-lg font-medium tracking-tight capitalize transition-colors duration-200 ${
+    active ? "bg-white text-black" : "bg-white/10 hover:bg-white hover:text-black"
+  }`;
+
+const mobilePillClass = () =>
+  "block rounded-full bg-white/10 px-5 py-3 text-lg font-medium tracking-tight capitalize";
+
+export default function Header() {
+  const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-black text-white">
@@ -65,24 +110,11 @@ export default function Header() {
         <div className="flex items-center gap-8">
           <nav aria-label="Principal" className="hidden md:block">
             <ul className="flex items-center gap-0.5">
-              {navItems.map((item) => {
-                const active = isActive(item.href);
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      aria-current={active ? "page" : undefined}
-                      className={`block rounded-full px-5 py-2.5 text-lg font-medium tracking-tight capitalize transition-colors duration-200 ${
-                        active
-                          ? "bg-white text-black"
-                          : "bg-white/10 hover:bg-white hover:text-black"
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                );
-              })}
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <NavLink item={item} className={desktopPillClass} />
+                </li>
+              ))}
             </ul>
           </nav>
 
@@ -126,18 +158,20 @@ export default function Header() {
       {open && (
         <nav id="mobile-menu" aria-label="Principal" className="px-4 pb-6 md:hidden">
           <ul className="flex flex-col gap-1">
-            {[...navItems, contactItem].map((item) => (
+            {navItems.map((item) => (
               <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  aria-current={isActive(item.href) && item !== contactItem ? "page" : undefined}
-                  className="block rounded-full bg-white/10 px-5 py-3 text-lg font-medium tracking-tight capitalize"
-                >
-                  {item.label}
-                </Link>
+                <NavLink item={item} className={mobilePillClass} onClick={() => setOpen(false)} />
               </li>
             ))}
+            <li>
+              <Link
+                href={contactItem.href}
+                onClick={() => setOpen(false)}
+                className={mobilePillClass()}
+              >
+                {contactItem.label}
+              </Link>
+            </li>
           </ul>
         </nav>
       )}
