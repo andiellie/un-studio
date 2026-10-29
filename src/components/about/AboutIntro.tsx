@@ -32,7 +32,7 @@ export default function AboutIntro() {
       </dl>
 
       <div>
-        <h2 className="font-serif text-3xl italic sm:text-4xl">del boceto a la entrega</h2>
+        <h2 className="font-serif text-3xl italic sm:text-4xl">Del boceto a la entrega</h2>
         <ol className="mt-10 grid gap-px overflow-hidden rounded-2xl bg-black/10 sm:grid-cols-2 lg:grid-cols-4">
           {about.process.map((step, i) => (
             <li key={step.title} className="flex flex-col gap-4 bg-white p-6 sm:p-8">

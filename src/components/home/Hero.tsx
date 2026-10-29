@@ -9,16 +9,17 @@ import TextSelection from "./TextSelection";
 export type HeroProps = Record<string, never>;
 
 // Position, size and aspect for each card, matched by index to heroCards.
-// Mobile keeps the cards in the corners so the center stays clear for the text.
+// Breakpoints: phone (<768) and tablet (md) keep 4 windows in the corners;
+// laptop and up (lg, 1024+) show all 8 around the text.
 const layout = [
-  "left-[2%] top-[2%] w-[34%] aspect-[3/4] md:left-[7%] md:top-[8%] md:w-[19%] md:aspect-[3/4.2]",
-  "hidden md:flex md:left-[24%] md:top-[30%] md:w-[10%] md:aspect-[3/4]",
-  "left-[4%] bottom-[2%] w-[30%] aspect-square md:left-[3%] md:top-[47%] md:bottom-auto md:w-[15%] md:aspect-[4/3.6]",
-  "hidden md:flex md:left-[15%] md:top-[64%] md:w-[19%] md:aspect-[4/2.9]",
-  "right-[2%] top-[2%] w-[30%] aspect-[3/4] md:right-[3%] md:top-[4%] md:w-[15%] md:aspect-[3/3.4]",
-  "hidden md:flex md:right-[14%] md:top-[20%] md:w-[18%] md:aspect-[4/2.8]",
-  "hidden md:flex md:right-[6%] md:top-[40%] md:w-[19%] md:aspect-[4/4]",
-  "right-[3%] bottom-[2%] w-[32%] aspect-[3/3.4] md:right-[3%] md:top-[64%] md:bottom-auto md:w-[12%] md:aspect-[3/4.2]",
+  "left-[2%] top-[2%] w-[34%] aspect-[3/4] md:w-[22%] lg:left-[7%] lg:top-[8%] lg:w-[19%] lg:aspect-[3/4.2]",
+  "hidden lg:flex lg:left-[24%] lg:top-[30%] lg:w-[10%] lg:aspect-[3/4]",
+  "left-[4%] bottom-[2%] w-[30%] aspect-square md:w-[20%] lg:left-[3%] lg:top-[47%] lg:bottom-auto lg:w-[15%] lg:aspect-[4/3.6]",
+  "hidden lg:flex lg:left-[15%] lg:top-[64%] lg:w-[19%] lg:aspect-[4/2.9]",
+  "right-[2%] top-[2%] w-[30%] aspect-[3/4] md:w-[20%] lg:right-[3%] lg:top-[4%] lg:w-[15%] lg:aspect-[3/3.4]",
+  "hidden lg:flex lg:right-[14%] lg:top-[20%] lg:w-[18%] lg:aspect-[4/2.8]",
+  "hidden lg:flex lg:right-[6%] lg:top-[40%] lg:w-[19%] lg:aspect-[4/4]",
+  "right-[3%] bottom-[2%] w-[32%] aspect-[3/3.4] md:w-[20%] lg:right-[3%] lg:top-[64%] lg:bottom-auto lg:w-[12%] lg:aspect-[3/4.2]",
 ];
 
 const baseZ = [10, 5, 20, 30, 10, 20, 5, 30];
@@ -120,7 +121,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative -mx-4 -mt-24 min-h-[640px] overflow-hidden sm:-mx-8 sm:-mt-32 md:h-[calc(100svh-5rem)] md:min-h-[720px]"
+      className="relative -mx-4 -mt-24 min-h-[640px] overflow-hidden sm:-mx-8 sm:-mt-32 md:min-h-[820px] lg:h-[calc(100svh-5rem)] lg:min-h-[720px]"
     >
       {heroCards.map((card, i) => (
         <WindowCard
@@ -139,7 +140,7 @@ export default function Hero() {
           initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="w-[min(70vw,420px)] md:w-[clamp(280px,23vw,440px)]"
+          className="w-[min(70vw,420px)] md:w-[min(50vw,420px)] lg:w-[clamp(280px,23vw,440px)]"
         >
           <Image
             src="/logos/unstudio-wordmark.png"

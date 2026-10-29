@@ -32,19 +32,19 @@ export const about: AboutContent = {
   ],
   process: [
     {
-      title: "escuchamos",
+      title: "Escuchamos",
       description: "Una primera sesión para entender tu negocio, tu espacio y lo que quieres provocar.",
     },
     {
-      title: "bocetamos",
+      title: "Bocetamos",
       description: "Exploramos caminos, materiales y referencias. Te mostramos pocas opciones, bien pensadas.",
     },
     {
-      title: "construimos",
+      title: "Construimos",
       description: "Producimos con talleres y equipos que conocemos, y revisamos cada detalle antes de entregar.",
     },
     {
-      title: "acompañamos",
+      title: "Acompañamos",
       description: "Seguimos cerca después de la entrega para que todo funcione y crezca con coherencia.",
     },
   ],

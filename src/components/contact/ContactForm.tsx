@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 import { services, type Service, type ServiceQuestion } from "@/data/services";
 import {
   contactSchema,
@@ -34,8 +35,8 @@ const labelClass = "font-serif text-2xl italic";
 const inputClass =
   "w-full bg-transparent py-3 text-lg shadow-[inset_0_-1px_0_0_#000] outline-none transition-shadow duration-200 placeholder:text-black/30 focus:shadow-[inset_0_-2px_0_0_#000] aria-invalid:shadow-[inset_0_-1px_0_0_#dc2626] aria-invalid:focus:shadow-[inset_0_-2px_0_0_#dc2626]";
 
-const pillClass = (selected: boolean) =>
-  `rounded-full px-5 py-2.5 text-lg font-medium tracking-tight transition-colors duration-200 ${
+const pillClass = (selected: boolean, shape = "rounded-full") =>
+  `${shape} px-5 py-2.5 text-lg font-medium tracking-tight transition-colors duration-200 ${
     selected ? "bg-black text-white" : "bg-black/5 hover:bg-black hover:text-white"
   }`;
 
@@ -272,7 +273,7 @@ export default function ContactForm() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="py-24"
           >
-            <p className="font-serif text-5xl italic sm:text-7xl">¡listo! —</p>
+            <p className="font-serif text-5xl italic sm:text-7xl">¡Listo! —</p>
             <p className="mt-2 text-3xl tracking-tight sm:text-5xl">
               te escribimos pronto xx
             </p>
@@ -312,7 +313,7 @@ export default function ContactForm() {
                       tabIndex={-1}
                       className="text-4xl tracking-tight outline-none sm:text-5xl"
                     >
-                      ¿en qué te podemos ayudar?
+                      ¿En qué te podemos ayudar?
                     </h2>
                     <fieldset aria-describedby={errors.services ? "services-error" : undefined}>
                       <legend className={labelClass}>
@@ -327,10 +328,13 @@ export default function ContactForm() {
                               type="button"
                               aria-pressed={selected}
                               onClick={() => toggleService(service.id)}
-                              className={pillClass(selected)}
+                              className={`${pillClass(selected, "rounded-2xl sm:rounded-full")} w-full text-left sm:w-auto`}
                             >
                               {service.title}
-                              <span className="opacity-50"> · {service.subtitle}</span>
+                              <span className="block text-base opacity-50 sm:inline sm:text-lg">
+                                <span className="hidden sm:inline"> · </span>
+                                {service.subtitle}
+                              </span>
                             </button>
                           );
                         })}
@@ -371,7 +375,7 @@ export default function ContactForm() {
                       tabIndex={-1}
                       className="text-4xl tracking-tight outline-none sm:text-5xl"
                     >
-                      ¿cómo te contactamos?
+                      ¿Cómo te contactamos?
                     </h2>
                     <div className="grid gap-12 sm:grid-cols-2">
                       <div>
@@ -458,6 +462,15 @@ export default function ContactForm() {
                 </button>
               )}
             </div>
+            {isLastStep && (
+              <p className="mt-6 text-sm text-black/50">
+                Al enviar aceptas nuestro{" "}
+                <Link href="/legal#privacidad" className="underline underline-offset-4 hover:text-black">
+                  aviso de privacidad
+                </Link>
+                .
+              </p>
+            )}
             {status === "error" && (
               <p role="alert" className="mt-4 text-sm text-red-600">
                 algo salió mal — intenta de nuevo en un momento.

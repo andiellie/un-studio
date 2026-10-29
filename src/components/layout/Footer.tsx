@@ -5,7 +5,7 @@ import { site } from "@/data/site";
 export type FooterProps = Record<string, never>;
 
 const pillClass =
-  "group inline-flex items-center gap-3 rounded-full border border-white/40 px-5 py-3 text-xs font-medium tracking-wide uppercase transition-colors duration-200 hover:border-white hover:bg-white hover:text-black";
+  "group inline-flex items-center gap-3 rounded-full border border-white/40 px-5 py-3 text-sm font-medium tracking-tight transition-colors duration-200 hover:border-white hover:bg-white hover:text-black";
 
 export default function Footer() {
   const emailHref = site.email ? `mailto:${site.email}` : "/contact";
@@ -23,13 +23,13 @@ export default function Footer() {
 
             <div className="mt-10 flex flex-wrap gap-3">
               <Link href={site.bookingHref} className={pillClass}>
-                Book a call
+                Agenda una llamada
                 <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">
                   →
                 </span>
               </Link>
               <a href={emailHref} className={pillClass}>
-                Drop us an email
+                Escríbenos
                 <span aria-hidden="true">@</span>
               </a>
             </div>
@@ -66,13 +66,16 @@ export default function Footer() {
           <p>© {site.name}</p>
           <nav aria-label="Footer" className="flex gap-6">
             <Link href="/" className="transition-colors duration-200 hover:text-white">
-              Home
+              Inicio
             </Link>
             <Link href="/about" className="transition-colors duration-200 hover:text-white">
-              About
+              Nosotros
             </Link>
             <Link href="/contact" className="transition-colors duration-200 hover:text-white">
-              Contact
+              Contacto
+            </Link>
+            <Link href="/legal" className="transition-colors duration-200 hover:text-white">
+              Legal
             </Link>
           </nav>
         </div>

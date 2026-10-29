@@ -14,7 +14,7 @@ export type SiteInfo = {
 // TODO: completar con los datos reales de unstudio
 export const site: SiteInfo = {
   name: "unstudio",
-  tagline: ["Let’s start", "something new"],
+  tagline: ["Trabajemos", "junt@s"],
   email: "",
   bookingHref: "/contact",
   socials: [

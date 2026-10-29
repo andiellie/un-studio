@@ -11,11 +11,11 @@ export type NavItem = {
 };
 
 export const navItems: NavItem[] = [
-  { label: "home", href: "/" },
-  { label: "about", href: "/about" },
+  { label: "inicio", href: "/" },
+  { label: "nosotros", href: "/about" },
 ];
 
-export const contactItem: NavItem = { label: "contact", href: "/contact" };
+export const contactItem: NavItem = { label: "contacto", href: "/contact" };
 
 export type HeaderProps = Record<string, never>;
 

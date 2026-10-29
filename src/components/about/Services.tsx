@@ -6,13 +6,13 @@ export type ServicesProps = Record<string, never>;
 export default function Services() {
   return (
     <section className="mt-24 sm:mt-32">
-      <h2 className="font-serif text-3xl italic sm:text-4xl">lo que hacemos</h2>
+      <h2 className="font-serif text-3xl italic sm:text-4xl">Lo que hacemos</h2>
 
       <ul className="mt-10 border-b border-black">
         {services.map((service, i) => (
           <li
             key={service.id}
-            className="grid gap-6 border-t border-black py-10 md:grid-cols-[4rem_1fr_1fr] md:gap-10 md:py-14"
+            className="grid gap-6 border-t border-black py-10 sm:grid-cols-[3rem_1fr] lg:grid-cols-[4rem_1fr_1fr] lg:gap-10 lg:py-14"
           >
             <span className="text-sm text-black/40 tabular-nums">0{i + 1}</span>
 
@@ -23,7 +23,7 @@ export default function Services() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 sm:col-start-2 lg:col-start-auto">
               <p className="text-lg leading-relaxed text-black/80">{service.description}</p>
               <ul className="flex flex-wrap gap-1">
                 {service.includes.map((item) => (
@@ -39,7 +39,7 @@ export default function Services() {
 
       <div className="mt-16 flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-2xl tracking-tight sm:text-3xl">
-          ¿tienes un proyecto en mente?
+          ¿Tienes un proyecto en mente?
         </p>
         <Link
           href="/contact"
