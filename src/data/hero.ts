@@ -7,14 +7,15 @@ export type HeroCard = {
   tint: string;
 };
 
-// TODO: agregar las imágenes reales en public/hero/ y completar `src`
+// Order matters: index i uses layout[i] in components/home/Hero.tsx.
+// On phone/tablet only cards 0, 2, 4 and 7 are visible.
 export const heroCards: HeroCard[] = [
-  { id: "helado", title: "branding.png", alt: "Branding de heladería", tint: "#f2f2f3" },
-  { id: "botella", title: "packaging.png", alt: "Packaging de botella", tint: "#f2f2f3" },
-  { id: "flores", title: "campaña.png", alt: "Campaña de flores", tint: "#f2f2f3" },
-  { id: "sillon", title: "muebles.png", alt: "Sillón tapizado", tint: "#f2f2f3" },
-  { id: "catalogo", title: "editorial.png", alt: "Catálogo impreso", tint: "#f2f2f3" },
-  { id: "redes", title: "redes.png", alt: "Contenido para redes", tint: "#f2f2f3" },
-  { id: "papeleria", title: "papelería.png", alt: "Papelería con hot stamping", tint: "#f2f2f3" },
-  { id: "interiores", title: "interiores.png", alt: "Proyecto de interiores", tint: "#f2f2f3" },
+  { id: "enyog", title: "branding.png", src: "/hero/enyog-cono.jpg", alt: "Cono de helado de yogurt Enyog sobre fondo amarillo", tint: "#f5d90a" },
+  { id: "cardenche", title: "empaque.png", src: "/hero/cardenche.jpg", alt: "Empaque Cardenche entre cactus", tint: "#c9a77a" },
+  { id: "olive-side-table", title: "muebles.png", src: "/hero/olive-side-table.jpg", alt: "Mesa auxiliar Olive en verde olivo y mármol", tint: "#e8e2d6" },
+  { id: "perfume", title: "packaging.png", src: "/hero/perfume.jpg", alt: "Packaging cilíndrico de perfume en tonos terracota", tint: "#c86f45" },
+  { id: "octubre-rosa", title: "redes.png", src: "/hero/octubre-rosa.jpg", alt: "Pieza para redes de Octubre Rosa", tint: "#f4c27a" },
+  { id: "gaga-mirror", title: "interiores.png", src: "/hero/gaga-mirror.jpg", alt: "Espejo GaGa en un baño", tint: "#d9d6d2" },
+  { id: "maizito-salsa", title: "producto.png", src: "/hero/maizito-salsa-verde.jpg", alt: "Salsa verde El Maizito con chiles", tint: "#c7c94a" },
+  { id: "maizito-bolsa", title: "identidad.png", src: "/hero/maizito-bolsa.jpg", alt: "Salsas El Maizito en bolsa de red roja", tint: "#f3c9c4" },
 ];

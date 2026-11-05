@@ -8,8 +8,12 @@ export type SiteInfo = {
   tagline: [string, string];
   email: string;
   bookingHref: string;
+  whatsappHref: string;
   socials: SocialLink[];
 };
+
+const WHATSAPP_HREF =
+  "https://wa.me/5218711865253?text=%C2%A1Hola!+Me+interesa+obtener+m%C3%A1s+informaci%C3%B3n+sobre+los+servicios+de+unstudio.+%C2%A1Muchas+gracias!";
 
 // TODO: completar con los datos reales de unstudio
 export const site: SiteInfo = {
@@ -17,8 +21,10 @@ export const site: SiteInfo = {
   tagline: ["Trabajemos", "junt@s"],
   email: "",
   bookingHref: "/contact",
+  whatsappHref: WHATSAPP_HREF,
   socials: [
     { label: "Instagram", href: "#" },
-    { label: "Behance", href: "#" },
+    { label: "WhatsApp", href: WHATSAPP_HREF },
+    { label: "TikTok", href: "#" },
   ],
 };

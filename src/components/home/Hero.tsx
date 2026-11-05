@@ -123,19 +123,23 @@ export default function Hero() {
       ref={containerRef}
       className="relative -mx-4 -mt-24 min-h-[640px] overflow-hidden sm:-mx-8 sm:-mt-32 md:min-h-[820px] lg:h-[calc(100svh-5rem)] lg:min-h-[720px]"
     >
-      {heroCards.map((card, i) => (
-        <WindowCard
-          key={card.id}
-          card={card}
-          index={i}
-          className={layout[i] ?? "hidden"}
-          zIndex={zOrder[i] ?? 1}
-          onFocus={() => bringToFront(i)}
-          constraintsRef={containerRef}
-        />
-      ))}
+      {/* Own stacking context: however high bringToFront pushes a card's
+          z-index, it can never rise above the text layer. */}
+      <div className="absolute inset-0 isolate z-0">
+        {heroCards.map((card, i) => (
+          <WindowCard
+            key={card.id}
+            card={card}
+            index={i}
+            className={layout[i] ?? "hidden"}
+            zIndex={zOrder[i] ?? 1}
+            onFocus={() => bringToFront(i)}
+            constraintsRef={containerRef}
+          />
+        ))}
+      </div>
 
-      <div className="pointer-events-none absolute inset-0 z-[35] flex flex-col items-center justify-center px-6 text-center">
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center">
         <motion.h1
           initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
