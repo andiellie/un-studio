@@ -19,7 +19,7 @@ export const contactItem: NavItem = { label: "contacto", href: "/contact" };
 
 export type HeaderProps = Record<string, never>;
 
-function ArrowIcon({ className = "" }: { className?: string }) {
+export function ArrowIcon({ className = "" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"

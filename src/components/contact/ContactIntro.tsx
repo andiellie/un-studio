@@ -1,20 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Fragment, useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { site } from "@/data/site";
-import ContactForm from "./ContactForm";
+import { ArrowIcon } from "@/components/layout/Header";
+import ContactForm, {
+  labelClass,
+  primaryButtonClass,
+  stepHeadingClass,
+  textLinkClass,
+} from "./ContactForm";
 
 export type ContactIntroProps = Record<string, never>;
 
 // Links ending in this hash (e.g. the footer CTA) skip the intro and open the form.
 export const FORM_HASH = "#proyecto";
 
-const primaryButtonClass =
-  "group inline-flex items-center gap-3 rounded-full bg-black px-7 py-3.5 text-base font-medium tracking-tight text-white transition-colors duration-200 hover:bg-[#FFE600] hover:text-black";
-
-const secondaryButtonClass =
-  "inline-flex items-center gap-3 rounded-full border border-black/20 px-7 py-3.5 text-base font-medium tracking-tight transition-colors duration-200 hover:border-black hover:bg-black hover:text-white";
+const HEADING = "¿Qué tienes en mente?";
+const HEADING_WORDS = HEADING.split(" ");
 
 export default function ContactIntro() {
   const [open, setOpen] = useState(false);
@@ -52,61 +55,94 @@ export default function ContactIntro() {
 
   const socials = site.socials.filter((s) => s.href !== site.whatsappHref);
 
+  // Load-in choreography: heading words rise out of a mask one by one, then the
+  // subtitle, actions and socials fade up in sequence. Reduced motion: fades only.
+  const ease = [0.22, 1, 0.36, 1] as const;
+  const section: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren: reduceMotion ? 0 : 0.09, delayChildren: 0.1 } },
+    exit: { opacity: 0, y: reduceMotion ? 0 : -16, transition: { duration: 0.3 } },
+  };
+  const word: Variants = {
+    hidden: reduceMotion ? { opacity: 0 } : { y: "110%" },
+    show: { y: 0, opacity: 1, transition: { duration: 0.7, ease } },
+  };
+  const item: Variants = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 14 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+  };
+
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence mode="wait">
       {open ? (
-        <motion.div key="form" {...fade} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}>
+        <motion.div key="form" {...fade} transition={{ duration: 0.45, ease }}>
           <ContactForm />
         </motion.div>
       ) : (
         <motion.section
           key="intro"
-          {...fade}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto max-w-3xl py-8 sm:py-16"
+          variants={section}
+          initial="hidden"
+          animate="show"
+          exit="exit"
+          // Same layout, type and voice as the form steps (ContactForm), so the
+          // intro reads as step zero of the same flow.
+          className="mx-auto max-w-3xl"
         >
-          <h1 className="text-4xl leading-[1.05] tracking-tight sm:text-6xl">
-            ¿Qué creamos
-            <br />
-            junt@s?
-          </h1>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-black/60 sm:text-lg">
-            Una pieza a medida, tu identidad de marca o tus redes. No necesitas
-            tenerlo todo claro: te guiamos con unas preguntas cortas.
-          </p>
+          <div className="flex flex-col gap-4">
+            <motion.h1
+              variants={{ show: { transition: { staggerChildren: reduceMotion ? 0 : 0.07 } } }}
+              aria-label={HEADING}
+              className={stepHeadingClass}
+            >
+              {HEADING_WORDS.map((w, i) => (
+                <Fragment key={i}>
+                  {/* Mask: the word slides up from below its own line. */}
+                  <span aria-hidden="true" className="inline-block overflow-hidden pb-[0.12em] align-bottom">
+                    <motion.span variants={word} className="inline-block">
+                      {w}
+                    </motion.span>
+                  </span>
+                  {i < HEADING_WORDS.length - 1 && " "}
+                </Fragment>
+              ))}
+            </motion.h1>
+            <motion.p variants={item} className={labelClass}>
+              no necesitas tenerlo todo claro, te guiamos paso a paso
+            </motion.p>
+          </div>
 
-          <div className="mt-10 flex flex-wrap gap-3">
+          <motion.div variants={item} className="mt-12 flex flex-wrap items-center gap-6">
             <button type="button" onClick={start} className={primaryButtonClass}>
-              Empieza tu proyecto
-              <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">
-                →
-              </span>
+              empieza tu proyecto
             </button>
             <a
               href={site.whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className={secondaryButtonClass}
+              className={`${textLinkClass} group inline-flex items-center gap-1.5`}
             >
-              Escríbenos por WhatsApp
+              o escríbenos por WhatsApp
+              {/* Corner arrow slides in on hover/focus (external link cue). */}
+              <ArrowIcon className="size-4 -translate-x-1 translate-y-1 opacity-0 transition-[opacity,translate] duration-200 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 motion-reduce:translate-x-0 motion-reduce:translate-y-0" />
             </a>
-          </div>
+          </motion.div>
 
           {socials.length > 0 && (
-            <ul className="mt-12 flex flex-wrap gap-x-8 gap-y-2 text-base tracking-tight sm:text-lg">
+            <motion.ul variants={item} className="mt-16 flex flex-wrap gap-x-6 gap-y-2">
               {socials.map((social) => (
                 <li key={social.label}>
                   <a
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-black/60 underline-offset-4 transition-colors duration-200 hover:text-black hover:underline"
+                    className={`${textLinkClass} text-black/50 hover:text-black`}
                   >
                     {social.label}
                   </a>
                 </li>
               ))}
-            </ul>
+            </motion.ul>
           )}
         </motion.section>
       )}

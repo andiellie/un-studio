@@ -30,18 +30,22 @@ type ContactDetails = {
 
 const emptyDetails: ContactDetails = { name: "", email: "", message: "", website: "" };
 
-const labelClass = "font-serif text-2xl italic";
+export const labelClass = "font-serif text-base italic";
+
+export const stepHeadingClass = "text-4xl tracking-tight outline-none sm:text-5xl";
+
+export const textLinkClass = "text-base tracking-tight underline-offset-4 hover:underline";
 
 const inputClass =
-  "w-full bg-transparent py-3 text-lg shadow-[inset_0_-1px_0_0_#000] outline-none transition-shadow duration-200 placeholder:text-black/30 focus:shadow-[inset_0_-2px_0_0_#000] aria-invalid:shadow-[inset_0_-1px_0_0_#dc2626] aria-invalid:focus:shadow-[inset_0_-2px_0_0_#dc2626]";
+  "w-full bg-transparent py-3 text-base shadow-[inset_0_-1px_0_0_#000] outline-none transition-shadow duration-200 placeholder:text-black/30 focus:shadow-[inset_0_-2px_0_0_#000] aria-invalid:shadow-[inset_0_-1px_0_0_#dc2626] aria-invalid:focus:shadow-[inset_0_-2px_0_0_#dc2626]";
 
 const pillClass = (selected: boolean, shape = "rounded-full") =>
-  `${shape} px-5 py-2.5 text-lg font-medium tracking-tight transition-colors duration-200 ${
+  `${shape} px-5 py-2.5 text-base font-medium tracking-tight transition-colors duration-200 ${
     selected ? "bg-black text-white" : "bg-black/5 hover:bg-black hover:text-white"
   }`;
 
-const primaryButtonClass =
-  "rounded-full bg-black px-10 py-4 text-lg font-medium tracking-tight text-white transition-colors duration-200 hover:bg-[#FFE600] hover:text-black disabled:cursor-wait disabled:opacity-60";
+export const primaryButtonClass =
+  "rounded-full bg-black px-10 py-4 text-base font-medium tracking-tight text-white transition-colors duration-200 hover:bg-[#FFE600] hover:text-black disabled:cursor-wait disabled:opacity-60";
 
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
@@ -311,7 +315,7 @@ export default function ContactForm() {
                     <h2
                       ref={headingRef}
                       tabIndex={-1}
-                      className="text-4xl tracking-tight outline-none sm:text-5xl"
+                      className={stepHeadingClass}
                     >
                       ¿En qué te podemos ayudar?
                     </h2>
@@ -331,7 +335,7 @@ export default function ContactForm() {
                               className={`${pillClass(selected, "rounded-2xl sm:rounded-full")} w-full text-left sm:w-auto`}
                             >
                               {service.title}
-                              <span className="block text-base opacity-50 sm:inline sm:text-lg">
+                              <span className="block text-base opacity-50 sm:inline">
                                 <span className="hidden sm:inline"> · </span>
                                 {service.subtitle}
                               </span>
@@ -349,7 +353,7 @@ export default function ContactForm() {
                     <h2
                       ref={headingRef}
                       tabIndex={-1}
-                      className="text-4xl tracking-tight outline-none sm:text-5xl"
+                      className={stepHeadingClass}
                     >
                       {step.service.title}
                       <span className="block font-serif text-2xl text-black/50 italic sm:text-3xl">
@@ -373,7 +377,7 @@ export default function ContactForm() {
                     <h2
                       ref={headingRef}
                       tabIndex={-1}
-                      className="text-4xl tracking-tight outline-none sm:text-5xl"
+                      className={stepHeadingClass}
                     >
                       ¿Cómo te contactamos?
                     </h2>
@@ -456,7 +460,7 @@ export default function ContactForm() {
                   type="button"
                   onClick={() => goTo(stepIndex - 1)}
                   disabled={sending}
-                  className="text-lg tracking-tight underline-offset-4 hover:underline"
+                  className={textLinkClass}
                 >
                   ← atrás
                 </button>
