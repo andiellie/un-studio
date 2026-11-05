@@ -20,7 +20,8 @@ export const site: SiteInfo = {
   name: "unstudio",
   tagline: ["Trabajemos", "junt@s"],
   email: "",
-  bookingHref: "/contact",
+  // "#proyecto" opens the contact form directly (see components/contact/ContactIntro).
+  bookingHref: "/contact#proyecto",
   whatsappHref: WHATSAPP_HREF,
   socials: [
     { label: "Instagram", href: "#" },
