@@ -18,7 +18,7 @@ export type TextSelectionProps = {
   delay?: number;
 };
 
-type Phase = "waiting" | "approach" | "dragging" | "selected";
+type Phase = "waiting" | "approach" | "dragging" | "selected" | "done";
 
 const humanEase = [0.45, 0.05, 0.55, 0.95] as const;
 
@@ -121,8 +121,15 @@ export default function TextSelection({ text, underlineChars = 0, delay = 1.2 }:
 
       // Release: handles appear and the cursor drifts away.
       setPhase("selected");
-      run(animate(x, end + 10, { duration: 0.6, ease: "easeOut" }));
-      run(animate(y, 26, { duration: 0.6, ease: "easeOut" }));
+      await Promise.all([
+        run(animate(x, end + 10, { duration: 0.6, ease: "easeOut" })),
+        run(animate(y, 26, { duration: 0.6, ease: "easeOut" })),
+      ]);
+      await wait(400);
+      if (cancelled) return;
+
+      // The cursor leaves; the selection stays.
+      setPhase("done");
     })();
 
     return () => {
@@ -136,9 +143,11 @@ export default function TextSelection({ text, underlineChars = 0, delay = 1.2 }:
 
   // With reduced motion, skip straight to the finished selection.
   const shownCount = reduceMotion ? edges.length : count;
-  const shownPhase: Phase = reduceMotion && ready ? "selected" : phase;
+  const shownPhase: Phase = reduceMotion && ready ? "done" : phase;
   const highlightWidth = shownCount > 0 ? edges[shownCount - 1] : 0;
-  const showHandles = shownPhase === "selected";
+  const showHandles = shownPhase === "selected" || shownPhase === "done";
+  // Visible only while the animation plays.
+  const showCursor = shownPhase !== "waiting" && shownPhase !== "done";
 
   return (
     <span ref={wrapperRef} className="relative whitespace-nowrap">
@@ -193,8 +202,8 @@ export default function TextSelection({ text, underlineChars = 0, delay = 1.2 }:
       <motion.span
         aria-hidden="true"
         initial={false}
-        animate={{ opacity: shownPhase === "waiting" ? 0 : 1 }}
-        transition={{ duration: 0.2 }}
+        animate={{ opacity: showCursor ? 1 : 0 }}
+        transition={{ duration: shownPhase === "done" ? 0.4 : 0.2 }}
         style={{ x, y }}
         className="absolute top-1/2 left-0"
       >

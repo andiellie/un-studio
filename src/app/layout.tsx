@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import SectionNav from "@/components/layout/SectionNav";
 import Footer from "@/components/layout/Footer";
+import BackToTop from "@/components/layout/BackToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SectionNav />
         <main className="mx-auto min-h-[150vh] w-full max-w-screen-2xl flex-1 px-4 py-24 sm:px-8 sm:py-32">{children}</main>
         <Footer />
+        <BackToTop />
       </body>
     </html>
   );
