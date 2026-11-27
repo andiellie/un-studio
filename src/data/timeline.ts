@@ -19,14 +19,19 @@ export type TimelineRow = {
 
 export type TimelineChapter = {
   id: string;
-  // Rolled out cell by cell in the band, e.g. "01".
-  number: string;
+  // Title in the black band.
   label: string;
-  // Band and strip background.
+  // Strip background.
   cover: { src: string; alt: string };
   statement: string;
+  // Optional pinned scroll scene after the statement strip
+  // (components/home/ScrollShowcase): the center shrinks from full screen,
+  // `before` and the first `after` appear beside it, then the row slides left.
+  showcase?: { center: GridImage; before: GridImage; after: GridImage[] };
   rows: TimelineRow[];
 };
+
+export type GridImage = { src: string; alt: string };
 
 // Home scroll section under the hero (components/home/Timeline.tsx).
 // Images come from public/Branding-Packaging, public/Signature Furniture and
@@ -34,10 +39,20 @@ export type TimelineChapter = {
 export const timeline: TimelineChapter[] = [
   {
     id: "branding",
-    number: "01",
     label: "branding y packaging",
     cover: { src: "/timeline/noa-agave.jpg", alt: "Logotipo de NOA sobre una planta de agave" },
     statement: "Marcas que se reconocen antes de leerse.",
+    showcase: {
+      center: { src: "/timeline/enyog-cono.jpg", alt: "Mano sosteniendo un cono de yogurt helado Enyog sobre fondo amarillo" },
+      before: { src: "/timeline/enyog-boceto.jpg", alt: "Boceto a lápiz del logotipo y personaje de Enyog" },
+      after: [
+        { src: "/timeline/enyog-completo.jpg", alt: "Envase de yogurt helado Enyog" },
+        { src: "/timeline/enyog-fresas.jpg", alt: "Envase Enyog entre fresas" },
+        { src: "/timeline/enyog-caras.jpg", alt: "Personajes de la marca Enyog" },
+        { src: "/timeline/enyog-tienda.jpg", alt: "Vaso de yogurt helado Enyog servido en tienda" },
+        { src: "/timeline/enyog-paleta.jpg", alt: "Paleta de color y aplicaciones de la marca Enyog" },
+      ],
+    },
     rows: [
       {
         small: {
@@ -68,7 +83,6 @@ export const timeline: TimelineChapter[] = [
   },
   {
     id: "mobiliario",
-    number: "02",
     label: "mobiliario de autor",
     cover: { src: "/timeline/olive-librero.jpg", alt: "Render del librero Olive con arcos y sillón" },
     statement: "Piezas pensadas a mano, hechas para quedarse.",
@@ -102,7 +116,6 @@ export const timeline: TimelineChapter[] = [
   },
   {
     id: "presencia",
-    number: "03",
     label: "presencia digital",
     cover: { src: "/timeline/epio-tienda.jpg", alt: "Fachada de la tienda Epio de noche" },
     statement: "La misma marca en la calle, en la pantalla y en tu feed.",

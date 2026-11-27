@@ -102,7 +102,9 @@ export default function Header() {
             alt="unstudio"
             width={2415}
             height={936}
-            priority
+            preload
+            // Rendered 40px tall, about 104px wide.
+            sizes="104px"
             className="h-10 w-auto invert"
           />
         </Link>

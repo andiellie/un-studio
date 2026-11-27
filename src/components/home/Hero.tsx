@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { heroCards, type HeroCard } from "@/data/hero";
@@ -24,6 +24,9 @@ const layout = [
 
 const baseZ = [10, 5, 20, 30, 10, 20, 5, 30];
 
+// Cards shown on phone and tablet too (see layout: the others are hidden below lg).
+const alwaysVisible = [0, 2, 4, 7];
+
 // Order in which the windows open on load, alternating sides (values are card indexes).
 const revealOrder = [0, 4, 2, 7, 1, 5, 3, 6];
 const revealStart = 0.35;
@@ -37,29 +40,20 @@ function WindowCard({
   className,
   zIndex,
   onFocus,
-  constraintsRef,
 }: {
   card: HeroCard;
   index: number;
   className: string;
   zIndex: number;
   onFocus: () => void;
-  constraintsRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const reduceMotion = useReducedMotion();
-  const [loaded, setLoaded] = useState(false);
   const delay = revealStart + revealOrder.indexOf(index) * revealStep;
 
   return (
     <motion.figure
-      drag
-      dragConstraints={constraintsRef}
-      dragMomentum={false}
-      dragElastic={0.1}
+      // Hovered card comes to the front so its 10% growth isn't hidden.
       onPointerEnter={onFocus}
-      onPointerDown={onFocus}
-      whileHover={reduceMotion ? undefined : { y: -6 }}
-      whileDrag={{ scale: 1.03, rotate: index % 2 ? 1.5 : -1.5 }}
       initial={
         reduceMotion
           ? { opacity: 0 }
@@ -75,7 +69,10 @@ function WindowCard({
             }
       }
       style={{ zIndex }}
-      className={`absolute flex cursor-grab touch-none flex-col overflow-hidden rounded-xl bg-[#e4e3e6] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)] select-none active:cursor-grabbing md:rounded-2xl ${className}`}
+      // Hover grow uses the CSS `scale` property (Tailwind v4), separate from the
+      // `transform` framer-motion writes for the entrance, so the two never clash
+      // and the card shrinks back right away without replaying the entrance delay.
+      className={`absolute flex flex-col overflow-hidden rounded-xl bg-[#e4e3e6] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)] transition-[scale] duration-300 ease-out select-none hover:scale-110 motion-reduce:hover:scale-100 md:rounded-2xl ${className}`}
     >
       <figcaption className="shrink-0 px-3 py-1.5 text-[10px] font-semibold tracking-tight md:text-xs">
         {card.title}
@@ -93,11 +90,13 @@ function WindowCard({
             alt={card.alt}
             fill
             draggable={false}
-            sizes="(min-width: 768px) 20vw, 35vw"
-            onLoad={() => setLoaded(true)}
-            className={`pointer-events-none object-cover transition-[opacity,scale] duration-700 ease-out ${
-              loaded ? "scale-100 opacity-100" : "scale-105 opacity-0"
-            }`}
+            // Cards visible at every breakpoint fetch right away; the rest stay lazy
+            // so phones (where they're display:none) never download them.
+            // The first card is the LCP element on desktop.
+            loading={alwaysVisible.includes(index) ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
+            sizes="(min-width: 1024px) 20vw, (min-width: 768px) 22vw, 35vw"
+            className="pointer-events-none object-cover"
           />
         )}
       </motion.div>
@@ -106,7 +105,6 @@ function WindowCard({
 }
 
 export default function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const [zOrder, setZOrder] = useState(baseZ);
 
@@ -120,7 +118,6 @@ export default function Hero() {
 
   return (
     <section
-      ref={containerRef}
       className="relative -mx-4 -mt-24 min-h-[640px] overflow-hidden sm:-mx-8 sm:-mt-32 md:min-h-[820px] lg:h-[calc(100svh-5rem)] lg:min-h-[720px]"
     >
       {/* Own stacking context: however high bringToFront pushes a card's
@@ -134,7 +131,6 @@ export default function Hero() {
             className={layout[i] ?? "hidden"}
             zIndex={zOrder[i] ?? 1}
             onFocus={() => bringToFront(i)}
-            constraintsRef={containerRef}
           />
         ))}
       </div>
@@ -151,7 +147,9 @@ export default function Hero() {
             alt="unstudio"
             width={2182}
             height={744}
-            priority
+            preload
+            // Matches the h1 width below; stops Next from serving the 3840px file.
+            sizes="(min-width: 1024px) 440px, (min-width: 768px) 50vw, 70vw"
             className="h-auto w-full"
           />
         </motion.h1>
