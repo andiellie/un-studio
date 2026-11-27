@@ -7,7 +7,6 @@ import {
   useReducedMotion,
   useScroll,
   useTransform,
-  type MotionValue,
 } from "framer-motion";
 import {
   timeline,
@@ -15,37 +14,13 @@ import {
   type TimelineImage,
   type TimelineRow,
 } from "@/data/timeline";
+import ScrollShowcase from "./ScrollShowcase";
 
 export type TimelineProps = Record<string, never>;
 
 // Header is h-20 (80px) and sticky, so pinned layers sit right under it.
 const PIN_TOP = "top-20";
 const ease = [0.22, 1, 0.36, 1] as const;
-
-// One cell of the band counter: the character rolls up from below as the
-// chapter scrolls in (scroll-linked, so scrolling back rolls it down again).
-function Digit({
-  char,
-  index,
-  progress,
-}: {
-  char: string;
-  index: number;
-  progress: MotionValue<number>;
-}) {
-  const reduceMotion = useReducedMotion();
-  const start = 0.15 + index * 0.12;
-  const y = useTransform(progress, [start, start + 0.35], ["105%", "0%"]);
-  return (
-    <span className="relative flex h-full items-center px-[4vw] md:px-[5vw]">
-      <span className="block overflow-hidden leading-none">
-        <motion.span style={reduceMotion ? undefined : { y }} className="block">
-          {char}
-        </motion.span>
-      </span>
-    </span>
-  );
-}
 
 // Image that wipes open when it enters the viewport and drifts against the
 // scroll while it is on screen.
@@ -148,7 +123,6 @@ function Chapter({ chapter }: { chapter: TimelineChapter }) {
     target: introRef,
     offset: ["start start", "end start"],
   });
-  const coverY = useTransform(pinned, [0, 1], ["0%", "25%"]);
   const stripY = useTransform(pinned, [0, 1], ["-10%", "10%"]);
   const statementOpacity = useTransform(enter, [0.6, 1], [0, 1]);
   const statementY = useTransform(enter, [0.6, 1], [40, 0]);
@@ -156,37 +130,15 @@ function Chapter({ chapter }: { chapter: TimelineChapter }) {
   return (
     <article aria-labelledby={`chapter-${chapter.id}`}>
       <div ref={introRef} className="relative">
-        {/* Band: pins under the header while the strip below scrolls up under it. */}
-        <div
-          className={`sticky ${PIN_TOP} z-20 h-32 overflow-hidden bg-neutral-900 text-white md:h-56`}
-        >
-          <motion.div style={reduceMotion ? undefined : { y: coverY }} className="absolute inset-0">
-            <Image
-              src={chapter.cover.src}
-              alt=""
-              fill
-              sizes="100vw"
-              className="object-cover opacity-30 grayscale"
-            />
-          </motion.div>
-          <h2 id={`chapter-${chapter.id}`} className="sr-only">
-            {chapter.number} {chapter.label}
-          </h2>
-          <div
-            aria-hidden="true"
-            className="relative flex h-full items-center justify-center text-6xl font-light tracking-tight md:text-9xl"
+        {/* Band: a plain black title bar that pins under the header while the
+            strip below scrolls up under it. */}
+        <div className={`sticky ${PIN_TOP} z-20 bg-black px-4 py-5 text-white sm:px-8 md:py-6`}>
+          <h2
+            id={`chapter-${chapter.id}`}
+            className="text-2xl font-medium tracking-tight md:text-4xl"
           >
-            {chapter.number.split("").map((char, i) => (
-              <div key={i} className="flex h-1/2 items-center">
-                {i > 0 && <span className="h-full w-px bg-white/40" />}
-                <Digit char={char} index={i} progress={enter} />
-              </div>
-            ))}
-            <span className="h-1/2 w-px bg-white/40" />
-            <span className="self-center pl-[3vw] text-sm font-normal tracking-normal md:text-xl">
-              {chapter.label}
-            </span>
-          </div>
+            {chapter.label}
+          </h2>
         </div>
 
         {/* Strip: cover image with the chapter statement. */}
@@ -198,7 +150,7 @@ function Chapter({ chapter }: { chapter: TimelineChapter }) {
             <Image src={chapter.cover.src} alt={chapter.cover.alt} fill sizes="100vw" className="object-cover" />
           </motion.div>
           <div className="absolute inset-0 bg-black/40" />
-          <div className="absolute inset-0 flex items-center justify-center px-6 pt-32 md:pt-56">
+          <div className="absolute inset-0 flex items-center justify-center px-6 pt-16 md:pt-20">
             <motion.p
               style={reduceMotion ? undefined : { opacity: statementOpacity, y: statementY }}
               className="max-w-3xl text-center text-2xl tracking-wide text-balance text-white md:text-4xl"
@@ -208,6 +160,8 @@ function Chapter({ chapter }: { chapter: TimelineChapter }) {
           </div>
         </div>
       </div>
+
+      {chapter.showcase && <ScrollShowcase {...chapter.showcase} />}
 
       {chapter.rows.map((row, i) => (
         <Row key={i} row={row} />
